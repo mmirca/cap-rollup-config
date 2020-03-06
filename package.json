@@ -1,0 +1,52 @@
+{
+  "name": "cap-rollup-config",
+  "version": "1.0.0",
+  "description": "Rollup configuration for vanilla JS projects that need to be bundled. Supports leagacy builds for IE11.",
+  "jsnext:main": "index.mjs",
+  "main": "commonjs/index.js",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mmirca/cap-rollup-config.git"
+  },
+  "keywords": [
+    "rollup",
+    "vanillajs",
+    "ie11",
+    "webcomponents",
+    "legacy"
+  ],
+  "dependencies": {
+    "regenerator-runtime": "^0.13.3",
+    "@webcomponents/webcomponentsjs": "^2.3.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.6.4",
+    "@babel/preset-env": "^7.6.3",
+    "husky": "^4.2.3",
+    "node-html-parser": "^1.2.8",
+    "rollup": "^1.32.1",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-cleaner": "^1.0.0",
+    "rollup-plugin-copy": "^3.3.0",
+    "rollup-plugin-entry-code-injector": "^1.0.0",
+    "rollup-plugin-filesize": "^6.2.1",
+    "rollup-plugin-livereload": "^1.0.4",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-serve": "^1.0.1",
+    "rollup-plugin-terser": "^5.1.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "node utils/pre-commit.js"
+    }
+  },
+  "author": "mmirca",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mmirca/cap-rollup-config/issues"
+  },
+  "homepage": "https://github.com/mmirca/cap-rollup-config#readme"
+}
