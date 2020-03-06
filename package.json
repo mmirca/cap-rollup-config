@@ -1,6 +1,6 @@
 {
   "name": "cap-rollup-config",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Rollup configuration for vanilla JS projects that need to be bundled. Supports leagacy builds for IE11.",
   "jsnext:main": "index.mjs",
   "main": "commonjs/index.js",
@@ -20,12 +20,9 @@
   ],
   "dependencies": {
     "regenerator-runtime": "^0.13.3",
-    "@webcomponents/webcomponentsjs": "^2.3.0"
-  },
-  "devDependencies": {
+    "@webcomponents/webcomponentsjs": "^2.3.0",
     "@babel/core": "^7.6.4",
     "@babel/preset-env": "^7.6.3",
-    "husky": "^4.2.3",
     "node-html-parser": "^1.2.8",
     "rollup": "^1.32.1",
     "rollup-plugin-babel": "^4.3.3",
@@ -37,6 +34,9 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-serve": "^1.0.1",
     "rollup-plugin-terser": "^5.1.2"
+  },
+  "devDependencies": {
+    "husky": "^4.2.3"
   },
   "husky": {
     "hooks": {
