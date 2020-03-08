@@ -46,6 +46,9 @@ export function getRollupConfig(options) {
         ...getBuildPlugins(parsedOptions)
       ]
     });
+    rollupConfig[0].plugins.unshift(
+      cleaner(getPluginConfig('cleaner', parsedOptions))
+    );
   }
   return rollupConfig;
 }
@@ -66,7 +69,6 @@ export function getBaseRollupConfig(options) {
       format: 'esm',
     },
     plugins: [
-      cleaner(getPluginConfig('cleaner', parsedOptions)),
       copy(getPluginConfig('copy', parsedOptions)),
       resolve(),
       babel(getPluginConfig('babel', parsedOptions))
