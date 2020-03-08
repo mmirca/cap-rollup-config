@@ -1,3 +1,4 @@
+[![npm](https://img.shields.io/npm/v/cap-rollup-config.svg)](https://www.npmjs.com/package/cap-rollup-config)
 [![libera manifesto](https://img.shields.io/badge/libera-manifesto-lightgrey.svg)](https://liberamanifesto.com)
 
 # cap-rollup-config
