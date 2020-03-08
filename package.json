@@ -1,6 +1,6 @@
 {
   "name": "cap-rollup-config",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Rollup configuration for vanilla JS projects that need to be bundled. Supports leagacy builds for IE11.",
   "jsnext:main": "index.mjs",
   "main": "commonjs/index.js",
