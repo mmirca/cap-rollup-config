@@ -264,6 +264,8 @@ function getBaseRollupConfig(options) {
     output: {
       dir: outputDir,
       format: 'esm',
+      chunkFileNames: '[name].[hash].js',
+      entryFileNames: `${outputFileName}.js`
     },
     plugins: [
       copy(getPluginConfig('copy', parsedOptions)),
@@ -274,7 +276,9 @@ function getBaseRollupConfig(options) {
     input: path.join(entryDir, `${entryFileName}.js`),
     output: {
       dir: outputDir,
-      format: 'esm',
+      format: 'amd',
+      chunkFileNames: '[name].[hash].legacy.js',
+      entryFileNames: `${outputFileName}.legacy.js`
     },
     plugins: [
       rollupPluginEntryCodeInjector.entryCodeInjector(getPluginConfig('entryCodeInjector', parsedOptions)),
