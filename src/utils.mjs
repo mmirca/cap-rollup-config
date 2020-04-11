@@ -23,6 +23,7 @@ export function getSpecifiedOptionsOrDeaults(options) {
     outputDir: 'build',
     outputFileName: 'index',
     host: 'localhost',
-    port: 4200
+    port: 4200,
+    extender: (pluginConfig) => pluginConfig
   }, options);
 }

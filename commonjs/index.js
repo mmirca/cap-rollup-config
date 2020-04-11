@@ -41,7 +41,8 @@ function getSpecifiedOptionsOrDeaults(options) {
     outputDir: 'build',
     outputFileName: 'index',
     host: 'localhost',
-    port: 4200
+    port: 4200,
+    extender: (pluginConfig) => pluginConfig
   }, options);
 }
 
@@ -75,7 +76,9 @@ function getPluginConfig(pluginConfigName, options) {
     livereload: getLivereloadConfig
   };
   const parsedOptions = getSpecifiedOptionsOrDeaults(options);
-  return pluginConfigsMap[pluginConfigName](parsedOptions) || {};
+  const pluginConfig = pluginConfigsMap[pluginConfigName](parsedOptions) || {};
+  const { extender } = parsedOptions;
+  return extender(pluginConfig, pluginConfigName);
 }
 /**
  * @private

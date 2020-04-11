@@ -32,7 +32,9 @@ export function getPluginConfig(pluginConfigName, options) {
     livereload: getLivereloadConfig
   };
   const parsedOptions = getSpecifiedOptionsOrDeaults(options);
-  return pluginConfigsMap[pluginConfigName](parsedOptions) || {};
+  const pluginConfig = pluginConfigsMap[pluginConfigName](parsedOptions) || {};
+  const { extender } = parsedOptions;
+  return extender(pluginConfig, pluginConfigName);
 };
 
 /**
