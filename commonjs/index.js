@@ -15,6 +15,7 @@ var livereload = _interopDefault(require('rollup-plugin-livereload'));
 var rollupPluginTerser = require('rollup-plugin-terser');
 var rollupPluginEntryCodeInjector = require('rollup-plugin-entry-code-injector');
 var nodeHtmlParser = require('node-html-parser');
+var terser = require('terser');
 
 /**
  * @typedef Options
@@ -152,9 +153,9 @@ function getEntryCodeInjectorConfig() {
 /**
  * @private
  */
-function injectScripts(options, code) {
+function injectScripts(options, codeBuffer) {
   const { outputFileName } = options;
-  const $html = nodeHtmlParser.parse(code.toString());
+  const $html = nodeHtmlParser.parse(codeBuffer.toString());
   const $body = $html.querySelector('body');
   $body.insertAdjacentHTML('beforeend', `
     <script src="./webcomponents-loader.js"></script>
@@ -168,6 +169,13 @@ function injectScripts(options, code) {
 /**
  * @private
  */
+function minifyScript(codeBuffer) {
+  return terser.minify(codeBuffer.toString()).code;
+}
+
+/**
+ * @private
+ */
 function getCopyConfig(options) {
   const { entryDir, outputDir, assetsDir } = options;
   return {
@@ -176,13 +184,21 @@ function getCopyConfig(options) {
       transform: injectScripts.bind(this, options),
       dest: outputDir
     }, {
+      src: assetsDir,
+      dest: outputDir,
+      copyOnce: true
+    }, {
+      src: 'node_modules/@webcomponents/webcomponentsjs/bundles/*.js',
+      dest: `${outputDir}/bundles`,
+      transform: minifyScript,
+      copyOnce: true
+    }, {
       src: [
-        assetsDir,
-        'node_modules/@webcomponents/webcomponentsjs/bundles',
         'node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js',
         'node_modules/requirejs/require.js'
       ],
       dest: outputDir,
+      transform: minifyScript,
       copyOnce: true
     }]
   };
