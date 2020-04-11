@@ -159,7 +159,7 @@ function injectScripts(options, code) {
   $body.insertAdjacentHTML('beforeend', `
     <script src="./webcomponents-loader.js"></script>
     <script defer src='./${outputFileName}.js' type="module"></script>
-    <script defer src='./${outputFileName}.legacy.js' nomodule></script>
+    <script defer data-main='./${outputFileName}.legacy.js' src="./require.js" nomodule></script>
   `);
   $html.removeWhitespace();
   return '<!DOCTYPE html>' + $html.toString();
@@ -179,7 +179,8 @@ function getCopyConfig(options) {
       src: [
         assetsDir,
         'node_modules/@webcomponents/webcomponentsjs/bundles',
-        'node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js'
+        'node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js',
+        'node_modules/requirejs/require.js'
       ],
       dest: outputDir,
       copyOnce: true
