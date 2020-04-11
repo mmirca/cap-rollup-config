@@ -8,6 +8,7 @@
  * @property {string} outputFileName - Output file name without extension. Defaults to 'index'
  * @property {string} host - Hostname of for the dev server. Defaults to 'localhost'
  * @property {number} port - Port on which to start the dev server. Defaults to 4200
+ * @property {function} extender - Method that can be used to extend the plugin configuration
  */
 
 /**
@@ -23,6 +24,7 @@ export function getSpecifiedOptionsOrDeaults(options) {
     outputDir: 'build',
     outputFileName: 'index',
     host: 'localhost',
-    port: 4200
+    port: 4200,
+    extender: (pluginConfig) => pluginConfig
   }, options);
 }

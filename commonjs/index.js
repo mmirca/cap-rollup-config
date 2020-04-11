@@ -15,6 +15,7 @@ var livereload = _interopDefault(require('rollup-plugin-livereload'));
 var rollupPluginTerser = require('rollup-plugin-terser');
 var rollupPluginEntryCodeInjector = require('rollup-plugin-entry-code-injector');
 var nodeHtmlParser = require('node-html-parser');
+var terser = require('terser');
 
 /**
  * @typedef Options
@@ -26,6 +27,7 @@ var nodeHtmlParser = require('node-html-parser');
  * @property {string} outputFileName - Output file name without extension. Defaults to 'index'
  * @property {string} host - Hostname of for the dev server. Defaults to 'localhost'
  * @property {number} port - Port on which to start the dev server. Defaults to 4200
+ * @property {function} extender - Method that can be used to extend the plugin configuration
  */
 
 /**
@@ -41,21 +43,10 @@ function getSpecifiedOptionsOrDeaults(options) {
     outputDir: 'build',
     outputFileName: 'index',
     host: 'localhost',
-    port: 4200
+    port: 4200,
+    extender: (pluginConfig) => pluginConfig
   }, options);
 }
-
-/**
- * @typedef Options
- * @type {Object}
- * @property {string} assetsDir - Assets directory. Defaults to 'src/assets'
- * @property {string} entryDir - Entry directory default to 'src'
- * @property {string} entryFileName - Entry file name without extension. Defaults to 'index'
- * @property {string} outputDir - Output directory. Defaults to 'build'
- * @property {string} outputFileName - Output file name without extension. Defaults to 'index'
- * @property {string} host - Hostname of for the dev server. Defaults to 'localhost'
- * @property {number} port - Port on which to start the dev server. Defaults to 4200
- */
 
 /**
  * Returns the configuration for the selected plugin applying the options
@@ -75,7 +66,9 @@ function getPluginConfig(pluginConfigName, options) {
     livereload: getLivereloadConfig
   };
   const parsedOptions = getSpecifiedOptionsOrDeaults(options);
-  return pluginConfigsMap[pluginConfigName](parsedOptions) || {};
+  const pluginConfig = pluginConfigsMap[pluginConfigName](parsedOptions) || {};
+  const { extender } = parsedOptions;
+  return extender(pluginConfig, pluginConfigName);
 }
 /**
  * @private
@@ -149,17 +142,24 @@ function getEntryCodeInjectorConfig() {
 /**
  * @private
  */
-function injectScripts(options, code) {
+function injectScripts(options, codeBuffer) {
   const { outputFileName } = options;
-  const $html = nodeHtmlParser.parse(code.toString());
+  const $html = nodeHtmlParser.parse(codeBuffer.toString());
   const $body = $html.querySelector('body');
   $body.insertAdjacentHTML('beforeend', `
     <script src="./webcomponents-loader.js"></script>
     <script defer src='./${outputFileName}.js' type="module"></script>
-    <script defer src='./${outputFileName}.legacy.js' nomodule></script>
+    <script defer data-main='./${outputFileName}.legacy.js' src="./require.js" nomodule></script>
   `);
   $html.removeWhitespace();
   return '<!DOCTYPE html>' + $html.toString();
+}
+
+/**
+ * @private
+ */
+function minifyScript(codeBuffer) {
+  return terser.minify(codeBuffer.toString()).code;
 }
 
 /**
@@ -173,12 +173,21 @@ function getCopyConfig(options) {
       transform: injectScripts.bind(this, options),
       dest: outputDir
     }, {
+      src: assetsDir,
+      dest: outputDir,
+      copyOnce: true
+    }, {
+      src: 'node_modules/@webcomponents/webcomponentsjs/bundles/*.js',
+      dest: `${outputDir}/bundles`,
+      transform: minifyScript,
+      copyOnce: true
+    }, {
       src: [
-        assetsDir,
-        'node_modules/@webcomponents/webcomponentsjs/bundles',
-        'node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js'
+        'node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js',
+        'node_modules/requirejs/require.js'
       ],
       dest: outputDir,
+      transform: minifyScript,
       copyOnce: true
     }]
   };
@@ -190,6 +199,7 @@ function getServeConfig(options) {
   const { outputDir, host, port } = options;
   return {
     contentBase: outputDir,
+    historyApiFallback: true,
     host,
     port
   };
@@ -203,18 +213,6 @@ function getLivereloadConfig(options) {
     watch: outputDir
   };
 }
-
-/**
- * @typedef Options
- * @type {Object}
- * @property {string} assetsDir - Assets directory. Defaults to 'src/assets'
- * @property {string} entryDir - Entry directory default to 'src'
- * @property {string} entryFileName - Entry file name without extension. Defaults to 'index'
- * @property {string} outputDir - Output directory. Defaults to 'build'
- * @property {string} outputFileName - Output file name without extension. Defaults to 'index'
- * @property {string} host - Hostname of for the dev server. Defaults to 'localhost'
- * @property {number} port - Port on which to start the dev server. Defaults to 4200
- */
 
 /**
  * Returns a configuration for Rollup that includes everything necessary
@@ -258,8 +256,10 @@ function getBaseRollupConfig(options) {
   return [{
     input: path.join(entryDir, `${entryFileName}.js`),
     output: {
-      file: path.join(outputDir, `${outputFileName}.js`),
+      dir: outputDir,
       format: 'esm',
+      chunkFileNames: '[name].[hash].js',
+      entryFileNames: `${outputFileName}.js`
     },
     plugins: [
       copy(getPluginConfig('copy', parsedOptions)),
@@ -269,8 +269,10 @@ function getBaseRollupConfig(options) {
   }, {
     input: path.join(entryDir, `${entryFileName}.js`),
     output: {
-      file: path.join(outputDir, `${outputFileName}.legacy.js`),
-      format: 'esm',
+      dir: outputDir,
+      format: 'amd',
+      chunkFileNames: '[name].[hash].legacy.js',
+      entryFileNames: `${outputFileName}.legacy.js`
     },
     plugins: [
       rollupPluginEntryCodeInjector.entryCodeInjector(getPluginConfig('entryCodeInjector', parsedOptions)),

@@ -12,18 +12,6 @@ import { getPluginConfig } from './plugins-config';
 import { getSpecifiedOptionsOrDeaults } from './utils' ;
 
 /**
- * @typedef Options
- * @type {Object}
- * @property {string} assetsDir - Assets directory. Defaults to 'src/assets'
- * @property {string} entryDir - Entry directory default to 'src'
- * @property {string} entryFileName - Entry file name without extension. Defaults to 'index'
- * @property {string} outputDir - Output directory. Defaults to 'build'
- * @property {string} outputFileName - Output file name without extension. Defaults to 'index'
- * @property {string} host - Hostname of for the dev server. Defaults to 'localhost'
- * @property {number} port - Port on which to start the dev server. Defaults to 4200
- */
-
-/**
  * Returns a configuration for Rollup that includes everything necessary
  * to generate JS bundles for mordern and legacy browsers.
  * Additionally, it provides a development server when Rollup is called with the
@@ -65,8 +53,10 @@ export function getBaseRollupConfig(options) {
   return [{
     input: path.join(entryDir, `${entryFileName}.js`),
     output: {
-      file: path.join(outputDir, `${outputFileName}.js`),
+      dir: outputDir,
       format: 'esm',
+      chunkFileNames: '[name].[hash].js',
+      entryFileNames: `${outputFileName}.js`
     },
     plugins: [
       copy(getPluginConfig('copy', parsedOptions)),
@@ -76,8 +66,10 @@ export function getBaseRollupConfig(options) {
   }, {
     input: path.join(entryDir, `${entryFileName}.js`),
     output: {
-      file: path.join(outputDir, `${outputFileName}.legacy.js`),
-      format: 'esm',
+      dir: outputDir,
+      format: 'amd',
+      chunkFileNames: '[name].[hash].legacy.js',
+      entryFileNames: `${outputFileName}.legacy.js`
     },
     plugins: [
       entryCodeInjector(getPluginConfig('entryCodeInjector', parsedOptions)),
