@@ -134,6 +134,33 @@ export default getRollupConfig({
 });
 ```
 
+### `extender`
+
+Type: `Function`<br>
+Default: `(pluginConfig) => pluginConfig`
+
+Method that can be used to extend the given configuration for each plugin. It will receive the plugin configuration object as the first parameter and the configuration name as the second parameter.
+
+```js
+import { getRollupConfig } from 'cap-rollup-config';
+
+export default getRollupConfig({
+  extender: (pluginConfig, configName) => {
+    switch(configName) {
+      case 'copy':
+        return {
+          ...pluginConfig,
+          // Add some more properties to the configuration object
+        };
+      case default:
+        // Don't forget to always return the plugin config as the
+        // method is called for every configuration
+        return pluginConfig;
+    }
+  }
+});
+```
+
 ## Meta
 
 [LICENSE (ISC)](https://opensource.org/licenses/ISC)

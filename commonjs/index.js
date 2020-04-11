@@ -27,6 +27,7 @@ var terser = require('terser');
  * @property {string} outputFileName - Output file name without extension. Defaults to 'index'
  * @property {string} host - Hostname of for the dev server. Defaults to 'localhost'
  * @property {number} port - Port on which to start the dev server. Defaults to 4200
+ * @property {function} extender - Method that can be used to extend the plugin configuration
  */
 
 /**
@@ -46,18 +47,6 @@ function getSpecifiedOptionsOrDeaults(options) {
     extender: (pluginConfig) => pluginConfig
   }, options);
 }
-
-/**
- * @typedef Options
- * @type {Object}
- * @property {string} assetsDir - Assets directory. Defaults to 'src/assets'
- * @property {string} entryDir - Entry directory default to 'src'
- * @property {string} entryFileName - Entry file name without extension. Defaults to 'index'
- * @property {string} outputDir - Output directory. Defaults to 'build'
- * @property {string} outputFileName - Output file name without extension. Defaults to 'index'
- * @property {string} host - Hostname of for the dev server. Defaults to 'localhost'
- * @property {number} port - Port on which to start the dev server. Defaults to 4200
- */
 
 /**
  * Returns the configuration for the selected plugin applying the options
@@ -224,18 +213,6 @@ function getLivereloadConfig(options) {
     watch: outputDir
   };
 }
-
-/**
- * @typedef Options
- * @type {Object}
- * @property {string} assetsDir - Assets directory. Defaults to 'src/assets'
- * @property {string} entryDir - Entry directory default to 'src'
- * @property {string} entryFileName - Entry file name without extension. Defaults to 'index'
- * @property {string} outputDir - Output directory. Defaults to 'build'
- * @property {string} outputFileName - Output file name without extension. Defaults to 'index'
- * @property {string} host - Hostname of for the dev server. Defaults to 'localhost'
- * @property {number} port - Port on which to start the dev server. Defaults to 4200
- */
 
 /**
  * Returns a configuration for Rollup that includes everything necessary
