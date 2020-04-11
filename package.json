@@ -19,11 +19,12 @@
     "legacy"
   ],
   "dependencies": {
-    "regenerator-runtime": "^0.13.3",
-    "@webcomponents/webcomponentsjs": "^2.3.0",
     "@babel/core": "^7.6.4",
     "@babel/preset-env": "^7.6.3",
+    "@webcomponents/webcomponentsjs": "^2.3.0",
     "node-html-parser": "^1.2.8",
+    "regenerator-runtime": "^0.13.3",
+    "requirejs": "^2.3.6",
     "rollup": "^1.32.1",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-cleaner": "^1.0.0",
