@@ -190,6 +190,7 @@ function getServeConfig(options) {
   const { outputDir, host, port } = options;
   return {
     contentBase: outputDir,
+    historyApiFallback: true,
     host,
     port
   };
@@ -258,7 +259,7 @@ function getBaseRollupConfig(options) {
   return [{
     input: path.join(entryDir, `${entryFileName}.js`),
     output: {
-      file: path.join(outputDir, `${outputFileName}.js`),
+      dir: outputDir,
       format: 'esm',
     },
     plugins: [
@@ -269,7 +270,7 @@ function getBaseRollupConfig(options) {
   }, {
     input: path.join(entryDir, `${entryFileName}.js`),
     output: {
-      file: path.join(outputDir, `${outputFileName}.legacy.js`),
+      dir: outputDir,
       format: 'esm',
     },
     plugins: [

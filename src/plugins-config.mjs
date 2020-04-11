@@ -154,6 +154,7 @@ function getServeConfig(options) {
   const { outputDir, host, port } = options;
   return {
     contentBase: outputDir,
+    historyApiFallback: true,
     host,
     port
   };

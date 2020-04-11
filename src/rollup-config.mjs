@@ -65,7 +65,7 @@ export function getBaseRollupConfig(options) {
   return [{
     input: path.join(entryDir, `${entryFileName}.js`),
     output: {
-      file: path.join(outputDir, `${outputFileName}.js`),
+      dir: outputDir,
       format: 'esm',
     },
     plugins: [
@@ -76,7 +76,7 @@ export function getBaseRollupConfig(options) {
   }, {
     input: path.join(entryDir, `${entryFileName}.js`),
     output: {
-      file: path.join(outputDir, `${outputFileName}.legacy.js`),
+      dir: outputDir,
       format: 'esm',
     },
     plugins: [
