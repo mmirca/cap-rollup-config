@@ -1,4 +1,3 @@
-import path from 'path';
 import resolve from 'rollup-plugin-node-resolve';
 import babel from 'rollup-plugin-babel';
 import filesize from 'rollup-plugin-filesize';
@@ -51,7 +50,7 @@ export function getBaseRollupConfig(options) {
   const parsedOptions = getSpecifiedOptionsOrDeaults(options);
   const { entryDir, entryFileName, outputDir, outputFileName } = parsedOptions;
   return [{
-    input: path.join(entryDir, `${entryFileName}.js`),
+    input: `${entryDir}/${entryFileName}.js`,
     output: {
       dir: outputDir,
       format: 'esm',
@@ -64,7 +63,7 @@ export function getBaseRollupConfig(options) {
       babel(getPluginConfig('babel', parsedOptions))
     ]
   }, {
-    input: path.join(entryDir, `${entryFileName}.js`),
+    input: `${entryDir}/${entryFileName}.js`,
     output: {
       dir: outputDir,
       format: 'amd',

@@ -4,7 +4,6 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var path = _interopDefault(require('path'));
 var resolve = _interopDefault(require('rollup-plugin-node-resolve'));
 var babel = _interopDefault(require('rollup-plugin-babel'));
 var filesize = _interopDefault(require('rollup-plugin-filesize'));
@@ -169,7 +168,7 @@ function getCopyConfig(options) {
   const { entryDir, outputDir, assetsDir } = options;
   return {
     targets: [{
-      src: path.join(entryDir, 'index.html'),
+      src: `${entryDir}/index.html`,
       transform: injectScripts.bind(this, options),
       dest: outputDir
     }, {
@@ -254,7 +253,7 @@ function getBaseRollupConfig(options) {
   const parsedOptions = getSpecifiedOptionsOrDeaults(options);
   const { entryDir, entryFileName, outputDir, outputFileName } = parsedOptions;
   return [{
-    input: path.join(entryDir, `${entryFileName}.js`),
+    input: `${entryDir}/${entryFileName}.js`,
     output: {
       dir: outputDir,
       format: 'esm',
@@ -267,7 +266,7 @@ function getBaseRollupConfig(options) {
       babel(getPluginConfig('babel', parsedOptions))
     ]
   }, {
-    input: path.join(entryDir, `${entryFileName}.js`),
+    input: `${entryDir}/${entryFileName}.js`,
     output: {
       dir: outputDir,
       format: 'amd',

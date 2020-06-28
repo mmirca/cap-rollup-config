@@ -1,4 +1,3 @@
-import path from 'path';
 import { parse } from 'node-html-parser';
 import { minify } from 'terser';
 import { getSpecifiedOptionsOrDeaults } from './utils' ;
@@ -130,7 +129,7 @@ function getCopyConfig(options) {
   const { entryDir, outputDir, assetsDir } = options;
   return {
     targets: [{
-      src: path.join(entryDir, 'index.html'),
+      src: `${entryDir}/index.html`,
       transform: injectScripts.bind(this, options),
       dest: outputDir
     }, {
